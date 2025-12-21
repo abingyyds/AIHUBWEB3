@@ -1,0 +1,10 @@
+endpoints:
+  custom:
+    - name: "LiteLLM"
+      apiKey: "sk-fb51IpfUY04_xTY4MI6h0g"
+      baseURL: "https://litellm-production-a736.up.railway.app/v1/models"
+
+      models:
+        fetch: true
+
+      modelDisplayLabel: "LiteLLM"
