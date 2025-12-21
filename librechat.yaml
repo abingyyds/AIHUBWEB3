@@ -6,7 +6,7 @@ endpoints:
       baseURL: "https://litellm-production-a736.up.railway.app/v1"
 
       models:
-        fetch: true
+
         default:
           - "groq/llama-3.1-8b-instant"
       modelDisplayLabel: "LiteLLM"
