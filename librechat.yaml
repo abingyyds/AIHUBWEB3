@@ -6,5 +6,6 @@ endpoints:
 
       models:
         fetch: true
-
+        default:
+          - "groq/llama-3.1-8b-instant"
       modelDisplayLabel: "LiteLLM"
