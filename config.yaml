@@ -1,0 +1,36 @@
+model_list:
+  # =========================
+  # 主路由：高质量 / 高消耗（付费）
+  # =========================
+  - model_name: paid-default
+    litellm_params:
+      model: openrouter/meta-llama/llama-3-70b-instruct
+      api_key: ${OPENROUTER_KEY}
+      api_base: https://openrouter.ai/api/v1
+
+  # =========================
+  # 兜底路由：免费模型（:free）
+  # =========================
+  - model_name: free-fallback
+    litellm_params:
+      model: openrouter/allenai/olmo-3.1-32b-think:free
+      api_key: ${OPENROUTER_KEY}
+      api_base: https://openrouter.ai/api/v1
+
+router_settings:
+  # 自动 fallback 规则
+  fallbacks:
+    paid-default:
+      - free-fallback
+
+  # 遇到这些情况时，自动切到 free-fallback
+  retry_on:
+    - 402   # OpenRouter 余额不足 / 超额
+    - 429   # 限流
+    - 500
+    - 502
+    - 503
+    - 504
+
+  # 可选：失败后最多重试 1 次（避免无限重试）
+  num_retries: 1
