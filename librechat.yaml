@@ -5,8 +5,13 @@ endpoints:
     - name: "LiteLLM"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
+
+      addParams:
+        user: "{{LIBRECHAT_USER_ID}}"
+
       models:
         fetch: true
         default:
           - "groq/llama-3.1-8b-instant"
+
       modelDisplayLabel: "LiteLLM"
