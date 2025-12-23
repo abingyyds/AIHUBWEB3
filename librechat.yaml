@@ -5,10 +5,6 @@ endpoints:
     - name: "LiteLLM"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
-
-      headers:
-        # 关键：把 LibreChat 登录用户的唯一 ID 传下去
-        X-LiteLLM-End-User: "{{LIBRECHAT_USER_ID}}"
         
       models:
         fetch: true
