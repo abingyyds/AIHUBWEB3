@@ -27,7 +27,7 @@ endpoints:
 
         default:
 
-      modelDisplayLabel: "LiteLLM"
+      modelDisplayLabel: "AllModels"
 
       dropParams:
         - stop
