@@ -7,6 +7,8 @@ endpoints:
       baseURL: "${LITELLM_BASE_URL}"
       models:
         fetch: true
+        X-End-User-Id: "{{LIBRECHAT_USER_ID}}"
+        X-End-User-Role: "{{LIBRECHAT_USER_ROLE}}"
         default:
           - "groq/llama-3.1-8b-instant"
       modelDisplayLabel: "LiteLLM"
