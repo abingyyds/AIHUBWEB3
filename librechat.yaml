@@ -5,10 +5,8 @@ endpoints:
     - name: "LiteLLM"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
-        
       models:
         fetch: true
         default:
           - "groq/llama-3.1-8b-instant"
       modelDisplayLabel: "LiteLLM"
-      dropParams: ["stop"]
