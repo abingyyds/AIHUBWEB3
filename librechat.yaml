@@ -6,9 +6,6 @@ endpoints:
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
 
-      addParams:
-        user: "{{LIBRECHAT_USER_ID}}"
-
       models:
         fetch: true
         default:
