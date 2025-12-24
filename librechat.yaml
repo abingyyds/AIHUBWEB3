@@ -1,7 +1,256 @@
+# =========================================================
+# LibreChat Custom Config (librechat.yaml)
+# Full-feature template aligned with LibreChat docs
+# =========================================================
 version: 1.3.1
 
+# Enable server-side caching (recommended)
+cache: true
+
+# ---------------------------------------------------------
+# Interface / UI (enable everything)
+# ---------------------------------------------------------
+interface:
+  modelSelect: true
+  parameters: true
+  sidePanel: true
+  presets: true
+  prompts: true
+  bookmarks: true
+  multiConvo: true
+
+  # Agents / Web Search / File Search buttons in chat UI
+  agents: true
+  webSearch: true
+  fileSearch: true
+  fileCitations: true
+
+  # Run Code button for markdown code blocks (not the Agents capability toggle)
+  runCode: true
+
+  # Agent Marketplace access
+  marketplace:
+    use: true
+
+  # MCP Servers UI label (optional)
+  mcpServers:
+    placeholder: "MCP Servers"
+
+  # Optional links
+  privacyPolicy:
+    externalUrl: "${PRIVACY_POLICY_URL}"
+    openNewTab: true
+  termsOfService:
+    externalUrl: "${TOS_URL}"
+    openNewTab: true
+
+  # Optional welcome message
+  customWelcome: "Welcome, {{user.name}}."
+
+  # People picker controls (optional)
+  peoplePicker:
+    users: true
+    groups: true
+    roles: true
+
+# ---------------------------------------------------------
+# Registration (optional; keep enabled)
+# ---------------------------------------------------------
+registration:
+  socialLogins: ["github", "google", "discord", "openid", "facebook"]
+  # allowedDomains:
+  #   - "gmail.com"
+  #   - "yourcompany.com"
+
+# ---------------------------------------------------------
+# File Upload Config (enable + generous limits)
+# ---------------------------------------------------------
+fileConfig:
+  serverFileSizeLimit: 200         # MB, global server limit
+  avatarSizeLimit: 5               # MB
+  endpoints:
+    default:
+      fileLimit: 20
+      fileSizeLimit: 50            # MB per file
+      totalSizeLimit: 200          # MB per request
+      supportedMimeTypes:
+        - "image/.*"
+        - "application/pdf"
+        - "text/.*"
+        - "application/json"
+        - "application/zip"
+        - "application/vnd.openxmlformats-officedocument.*"
+        - "application/msword"
+        - "application/vnd.ms-excel"
+        - "application/vnd.ms-powerpoint"
+    assistants:
+      fileLimit: 20
+      fileSizeLimit: 50
+      totalSizeLimit: 200
+      supportedMimeTypes:
+        - "image/.*"
+        - "application/pdf"
+        - "text/.*"
+    agents:
+      fileLimit: 20
+      fileSizeLimit: 50
+      totalSizeLimit: 200
+      supportedMimeTypes:
+        - "image/.*"
+        - "application/pdf"
+        - "text/.*"
+
+# ---------------------------------------------------------
+# Actions (OpenAPI tools) — allow broad domains
+# You can tighten later by whitelisting only your domains.
+# ---------------------------------------------------------
+actions:
+  allowedDomains:
+    - "librechat.ai"
+    - "github.com"
+    - "api.github.com"
+    - "google.com"
+    - "serper.dev"
+    - "openweathermap.org"
+    - "docs.firecrawl.dev"
+    - "bfl.ml"
+    # add your own domains:
+    # - "api.web3.club"
+    # - "chainnode.yourdomain.com"
+
+# ---------------------------------------------------------
+# Memory (enable, generous limits)
+# ---------------------------------------------------------
+memory:
+  disabled: false
+  personalize: true
+  messageWindowSize: 30
+  tokenLimit: 8000
+  charLimit: 30000
+  validKeys:
+    - "profile"
+    - "preferences"
+    - "projects"
+    - "glossary"
+
+# ---------------------------------------------------------
+# OCR (enable; provider keys are usually in .env / service)
+# ---------------------------------------------------------
+ocr:
+  enabled: true
+
+# ---------------------------------------------------------
+# Web Search (Serper + Firecrawl + Jina rerank)
+# If you don't set env vars, LibreChat UI will prompt for keys.
+# ---------------------------------------------------------
+webSearch:
+  # Search Provider
+  searchProvider: "serper"         # Options: "serper", "searxng"
+  serperApiKey: "${SERPER_API_KEY}"
+  searxngInstanceUrl: "${SEARXNG_INSTANCE_URL}"
+  searxngApiKey: "${SEARXNG_API_KEY}"
+
+  # Scraper
+  scraperProvider: "firecrawl"     # Options: "firecrawl", "serper"
+  firecrawlApiKey: "${FIRECRAWL_API_KEY}"
+  firecrawlApiUrl: "${FIRECRAWL_API_URL}"
+  firecrawlVersion: "${FIRECRAWL_VERSION}"
+
+  # Reranker
+  rerankerType: "jina"             # Options: "jina", "cohere"
+  jinaApiKey: "${JINA_API_KEY}"
+  jinaApiUrl: "${JINA_API_URL}"
+  cohereApiKey: "${COHERE_API_KEY}"
+
+  # General
+  scraperTimeout: 7500
+  safeSearch: 1
+
+# ---------------------------------------------------------
+# Speech (STT/TTS) — enable UI + external engines
+# ---------------------------------------------------------
+speech:
+  speechTab:
+    conversationMode: true
+    advancedMode: true
+    speechToText:
+      engineSTT: "external"        # browser | external
+      languageSTT: "English (US)"
+      autoTranscribeAudio: true
+      decibelValue: -45
+      autoSendText: 0
+    textToSpeech:
+      engineTTS: "external"        # browser | external
+      voice: "alloy"
+      languageTTS: "en"
+      automaticPlayback: true
+      playbackRate: 1.0
+      cacheTTS: true
+
+  # External STT endpoints (OpenAI-compatible)
+  stt:
+    openai:
+      url: "${STT_OPENAI_URL}"     # e.g. http://host.docker.internal:8080/v1/audio/transcriptions
+      apiKey: "${STT_API_KEY}"
+      model: "${STT_MODEL}"        # e.g. whisper-1 / whisper
+    azureOpenAI:
+      instanceName: "${AZURE_STT_INSTANCE}"
+      apiKey: "${AZURE_STT_API_KEY}"
+      deploymentName: "${AZURE_STT_DEPLOYMENT}"
+      apiVersion: "${AZURE_STT_API_VERSION}"
+
+  # External TTS endpoints (OpenAI-compatible)
+  tts:
+    openai:
+      url: "${TTS_OPENAI_URL}"     # e.g. https://api.openai.com/v1/audio/speech
+      apiKey: "${TTS_API_KEY}"
+      model: "${TTS_MODEL}"        # e.g. gpt-4o-mini-tts (or your provider)
+      voice: "${TTS_VOICE}"        # e.g. alloy
+
+# ---------------------------------------------------------
+# MCP Servers (optional; example placeholder)
+# Add real MCP servers as needed.
+# ---------------------------------------------------------
+mcpServers:
+  # Example:
+  # spotify:
+  #   transport: "stdio"
+  #   command: "node"
+  #   args: ["${MCP_SPOTIFY_SERVER_PATH}"]
+  #   env:
+  #     SPOTIFY_CLIENT_ID: "${SPOTIFY_CLIENT_ID}"
+  #     SPOTIFY_CLIENT_SECRET: "${SPOTIFY_CLIENT_SECRET}"
+  {}
+
+# ---------------------------------------------------------
+# Endpoints (Assistants + Agents + Custom Providers)
+# ---------------------------------------------------------
 endpoints:
+  # Assistants API behavior (OpenAI / Azure Assistants)
+  assistants:
+    disableBuilder: false
+    pollIntervalMs: 2000
+    timeoutMs: 180000
+    # keep full capability set
+    capabilities: ["code_interpreter", "retrieval", "actions", "tools", "image_vision"]
+
+  # Agents endpoint (LibreChat native agents)
+  agents:
+    disableBuilder: false
+    recursionLimit: 50
+    maxRecursionLimit: 100
+    # Allow all providers (built-in + custom); leave empty = allow all
+    allowedProviders: []
+    # Enable all agent capabilities (docs default list)
+    capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
+
+  # -------------------------------------------------------
+  # Custom Endpoints (OpenAI-compatible APIs)
+  # -------------------------------------------------------
   custom:
+    # -------------------------
+    # Your LiteLLM (primary)
+    # -------------------------
     - name: "LiteLLM"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
@@ -9,4 +258,277 @@ endpoints:
         fetch: true
         default:
           - "groq/llama-3.1-8b-instant"
+      titleConvo: true
       modelDisplayLabel: "LiteLLM"
+
+    # -------------------------
+    # Groq (known)
+    # -------------------------
+    - name: "groq"
+      apiKey: "${GROQ_API_KEY}"
+      baseURL: "https://api.groq.com/openai/v1/"
+      models:
+        fetch: false
+        default:
+          - "llama-3.1-8b-instant"
+          - "llama3-70b-8192"
+          - "mixtral-8x7b-32768"
+      titleConvo: true
+      titleMethod: "completion"
+      titleModel: "mixtral-8x7b-32768"
+      modelDisplayLabel: "groq"
+
+    # -------------------------
+    # OpenRouter (known)
+    # -------------------------
+    - name: "OpenRouter"
+      apiKey: "${OPENROUTER_API_KEY}"
+      baseURL: "https://openrouter.ai/api/v1"
+      models:
+        fetch: true
+        default:
+          - "meta-llama/llama-3-70b-instruct"
+      titleConvo: true
+      titleModel: "meta-llama/llama-3-70b-instruct"
+      dropParams: ["stop"]
+      modelDisplayLabel: "OpenRouter"
+
+    # -------------------------
+    # Mistral (known)
+    # -------------------------
+    - name: "Mistral"
+      apiKey: "${MISTRAL_API_KEY}"
+      baseURL: "https://api.mistral.ai/v1"
+      models:
+        fetch: true
+        default:
+          - "mistral-tiny"
+          - "mistral-small"
+          - "mistral-medium"
+      titleConvo: true
+      titleModel: "mistral-tiny"
+      dropParams: ["stop", "user", "frequency_penalty", "presence_penalty"]
+      modelDisplayLabel: "Mistral"
+
+    # -------------------------
+    # Deepseek (known)
+    # -------------------------
+    - name: "Deepseek"
+      apiKey: "${DEEPSEEK_API_KEY}"
+      baseURL: "${DEEPSEEK_BASE_URL}"   # e.g. https://api.deepseek.com
+      models:
+        fetch: true
+        default:
+          - "${DEEPSEEK_DEFAULT_MODEL}"
+      titleConvo: true
+      titleMethod: "completion"
+      titleModel: "${DEEPSEEK_DEFAULT_MODEL}"
+      modelDisplayLabel: "Deepseek"
+
+    # -------------------------
+    # Fireworks (known)
+    # -------------------------
+    - name: "Fireworks"
+      apiKey: "${FIREWORKS_API_KEY}"
+      baseURL: "${FIREWORKS_BASE_URL}"  # e.g. https://api.fireworks.ai/inference/v1
+      models:
+        fetch: true
+        default:
+          - "${FIREWORKS_DEFAULT_MODEL}"
+      titleConvo: true
+      titleModel: "${FIREWORKS_DEFAULT_MODEL}"
+      modelDisplayLabel: "Fireworks"
+
+    # -------------------------
+    # Perplexity (known)
+    # -------------------------
+    - name: "Perplexity"
+      apiKey: "${PERPLEXITY_API_KEY}"
+      baseURL: "${PERPLEXITY_BASE_URL}" # e.g. https://api.perplexity.ai
+      models:
+        fetch: true
+        default:
+          - "${PERPLEXITY_DEFAULT_MODEL}"
+      titleConvo: true
+      titleModel: "${PERPLEXITY_DEFAULT_MODEL}"
+      modelDisplayLabel: "Perplexity"
+
+    # -------------------------
+    # together.ai (known)
+    # -------------------------
+    - name: "together.ai"
+      apiKey: "${TOGETHERAI_API_KEY}"
+      baseURL: "https://api.together.xyz"
+      models:
+        fetch: false
+        default:
+          - "meta-llama/Llama-3.1-70B-Instruct-Turbo"
+          - "mistralai/Mixtral-8x7B-Instruct-v0.1"
+      titleConvo: true
+      titleModel: "meta-llama/Llama-3.1-70B-Instruct-Turbo"
+      modelDisplayLabel: "together.ai"
+
+    # -------------------------
+    # Workers AI (Cloudflare)
+    # -------------------------
+    - name: "Workers AI"
+      apiKey: "${CLOUDFLARE_WORKERS_AI_TOKEN}"
+      baseURL: "${CLOUDFLARE_WORKERS_AI_BASE_URL}"
+      models:
+        fetch: true
+        default:
+          - "${CLOUDFLARE_WORKERS_AI_DEFAULT_MODEL}"
+      titleConvo: true
+      titleModel: "${CLOUDFLARE_WORKERS_AI_DEFAULT_MODEL}"
+      modelDisplayLabel: "Workers AI"
+
+    # -------------------------
+    # xAI (known)
+    # -------------------------
+    - name: "xai"
+      apiKey: "${XAI_API_KEY}"
+      baseURL: "https://api.x.ai/v1"
+      models:
+        fetch: false
+        default:
+          - "grok-beta"
+      titleConvo: true
+      titleMethod: "completion"
+      titleModel: "grok-beta"
+      modelDisplayLabel: "Grok"
+
+    # -------------------------
+    # vLLM (local gateway)
+    # -------------------------
+    - name: "vLLM"
+      apiKey: "${VLLM_API_KEY}"          # can be dummy if your vLLM doesn’t require auth
+      baseURL: "${VLLM_BASE_URL}"        # e.g. http://localhost:8023/v1
+      models:
+        fetch: true
+        default:
+          - "${VLLM_DEFAULT_MODEL}"
+      titleConvo: true
+      titleModel: "${VLLM_DEFAULT_MODEL}"
+      modelDisplayLabel: "vLLM"
+
+    # -------------------------
+    # Ollama (local)
+    # -------------------------
+    - name: "ollama"
+      apiKey: "${OLLAMA_API_KEY}"        # can be dummy
+      baseURL: "${OLLAMA_BASE_URL}"      # e.g. http://localhost:11434/v1
+      models:
+        fetch: true
+        default:
+          - "${OLLAMA_DEFAULT_MODEL}"
+      titleConvo: true
+      titleModel: "${OLLAMA_DEFAULT_MODEL}"
+      modelDisplayLabel: "ollama"
+
+    # -------------------------
+    # HuggingFace Inference (OpenAI-compatible gateways vary)
+    # -------------------------
+    - name: "Huggingface"
+      apiKey: "${HUGGINGFACE_API_KEY}"
+      baseURL: "${HUGGINGFACE_BASE_URL}"
+      models:
+        fetch: true
+        default:
+          - "${HUGGINGFACE_DEFAULT_MODEL}"
+      titleConvo: true
+      titleModel: "${HUGGINGFACE_DEFAULT_MODEL}"
+      modelDisplayLabel: "Huggingface"
+
+    # -------------------------
+    # Cohere (if using OpenAI-compatible gateway / proxy)
+    # -------------------------
+    - name: "Cohere"
+      apiKey: "${COHERE_LLM_API_KEY}"
+      baseURL: "${COHERE_OPENAI_COMPAT_BASE_URL}"
+      models:
+        fetch: true
+        default:
+          - "${COHERE_DEFAULT_MODEL}"
+      titleConvo: true
+      titleModel: "${COHERE_DEFAULT_MODEL}"
+      modelDisplayLabel: "Cohere"
+
+    # -------------------------
+    # Databricks / Portkey / ShuttleAI / TrueFoundry / Vultr
+    # (All assume OpenAI-compatible gateway URLs)
+    # -------------------------
+    - name: "Databricks"
+      apiKey: "${DATABRICKS_API_KEY}"
+      baseURL: "${DATABRICKS_BASE_URL}"
+      models:
+        fetch: true
+        default: ["${DATABRICKS_DEFAULT_MODEL}"]
+      titleConvo: true
+      titleModel: "${DATABRICKS_DEFAULT_MODEL}"
+      modelDisplayLabel: "Databricks"
+
+    - name: "Portkey AI"
+      apiKey: "${PORTKEY_API_KEY}"
+      baseURL: "${PORTKEY_BASE_URL}"
+      models:
+        fetch: true
+        default: ["${PORTKEY_DEFAULT_MODEL}"]
+      titleConvo: true
+      titleModel: "${PORTKEY_DEFAULT_MODEL}"
+      modelDisplayLabel: "Portkey"
+
+    - name: "ShuttleAI"
+      apiKey: "${SHUTTLEAI_API_KEY}"
+      baseURL: "https://api.shuttleai.app/v1"
+      models:
+        fetch: true
+        default: ["${SHUTTLEAI_DEFAULT_MODEL}"]
+      titleConvo: true
+      titleModel: "${SHUTTLEAI_DEFAULT_MODEL}"
+      modelDisplayLabel: "ShuttleAI"
+
+    - name: "TrueFoundry AI Gateway"
+      apiKey: "${TRUEFOUNDRY_API_KEY}"
+      baseURL: "${TRUEFOUNDRY_BASE_URL}"
+      models:
+        fetch: true
+        default: ["${TRUEFOUNDRY_DEFAULT_MODEL}"]
+      titleConvo: true
+      titleModel: "${TRUEFOUNDRY_DEFAULT_MODEL}"
+      modelDisplayLabel: "TrueFoundry"
+
+    - name: "Vultr Cloud Inference"
+      apiKey: "${VULTR_API_KEY}"
+      baseURL: "${VULTR_BASE_URL}"
+      models:
+        fetch: true
+        default: ["${VULTR_DEFAULT_MODEL}"]
+      titleConvo: true
+      titleModel: "${VULTR_DEFAULT_MODEL}"
+      modelDisplayLabel: "Vultr"
+
+    # -------------------------
+    # Apple MLX (local gateway)
+    # -------------------------
+    - name: "MLX"
+      apiKey: "${MLX_API_KEY}"
+      baseURL: "${MLX_BASE_URL}"
+      models:
+        fetch: true
+        default: ["${MLX_DEFAULT_MODEL}"]
+      titleConvo: true
+      titleModel: "${MLX_DEFAULT_MODEL}"
+      modelDisplayLabel: "MLX"
+
+    # -------------------------
+    # NeurochainAI (gateway)
+    # -------------------------
+    - name: "NeurochainAI"
+      apiKey: "${NEUROCHAIN_API_KEY}"
+      baseURL: "${NEUROCHAIN_BASE_URL}"
+      models:
+        fetch: true
+        default: ["${NEUROCHAIN_DEFAULT_MODEL}"]
+      titleConvo: true
+      titleModel: "${NEUROCHAIN_DEFAULT_MODEL}"
+      modelDisplayLabel: "NeurochainAI"
