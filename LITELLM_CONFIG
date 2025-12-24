@@ -1,0 +1,105 @@
+model_list:
+  # =========================
+  # Gemini (Google)
+  # =========================
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: gemini-2.5-pro
+      api_base: "${GOOGLE_API_BASE}"
+      api_key: "${GOOGLE_API_KEY}"
+
+  - model_name: gemini-3-pro-preview
+    litellm_params:
+      model: gemini-3-pro-preview
+      api_base: "${GOOGLE_API_BASE}"
+      api_key: "${GOOGLE_API_KEY}"
+
+  - model_name: gemini-3-pro-image-preview
+    litellm_params:
+      model: gemini-3-pro-image-preview
+      api_base: "${GOOGLE_API_BASE}"
+      api_key: "${GOOGLE_API_KEY}"
+
+  # =========================
+  # Claude (Anthropic, OpenAI protocol)
+  # =========================
+  - model_name: claude-sonnet-4-5-thinking
+    litellm_params:
+      model: openai/claude-sonnet-4-5-thinking
+      api_base: "${ANTHROPIC_API_BASE}"
+      api_key: "${ANTHROPIC_API_KEY}"
+
+  - model_name: claude-opus-4-5-thinking
+    litellm_params:
+      model: openai/claude-opus-4-5-thinking
+      api_base: "${ANTHROPIC_API_BASE}"
+      api_key: "${ANTHROPIC_API_KEY}"
+
+  # =========================
+  # OpenAI
+  # =========================
+  - model_name: gpt-4.1
+    litellm_params:
+      model: gpt-4.1
+      api_base: "${OPENAI_API_BASE}"
+      api_key: "${OPENAI_API_KEY}"
+
+  - model_name: gpt-5-pro
+    litellm_params:
+      model: gpt-5-pro
+      api_base: "${OPENAI_API_BASE}"
+      api_key: "${OPENAI_API_KEY}"
+
+  - model_name: gpt-5.1
+    litellm_params:
+      model: gpt-5.1
+      api_base: "${OPENAI_API_BASE}"
+      api_key: "${OPENAI_API_KEY}"
+
+  - model_name: gpt-5.2
+    litellm_params:
+      model: gpt-5.2
+      api_base: "${OPENAI_API_BASE}"
+      api_key: "${OPENAI_API_KEY}"
+
+  # =========================
+  # Grok (xAI, OpenAI protocol)
+  # =========================
+  - model_name: grok-4.1
+    litellm_params:
+      model: openai/grok-4.1
+      api_base: "${XAI_API_BASE}"
+      api_key: "${XAI_API_KEY}"
+
+  - model_name: grok-4.1-thinking
+    litellm_params:
+      model: openai/grok-4.1-thinking
+      api_base: "${XAI_API_BASE}"
+      api_key: "${XAI_API_KEY}"
+
+  # =========================
+  # DeepSeek
+  # =========================
+  - model_name: DeepSeek-V3.2
+    litellm_params:
+      model: openai/DeepSeek-V3.2
+      api_base: "${DEEPSEEK_API_BASE}"
+      api_key: "${DEEPSEEK_API_KEY}"
+
+  - model_name: DeepSeek-V3.2-search
+    litellm_params:
+      model: openai/DeepSeek-V3.2-search
+      api_base: "${DEEPSEEK_API_BASE}"
+      api_key: "${DEEPSEEK_API_KEY}"
+
+  - model_name: DeepSeek-V3.2-thinking
+    litellm_params:
+      model: openai/DeepSeek-V3.2-thinking
+      api_base: "${DEEPSEEK_API_BASE}"
+      api_key: "${DEEPSEEK_API_KEY}"
+
+  - model_name: DeepSeek-V3.2-thinking-search
+    litellm_params:
+      model: openai/DeepSeek-V3.2-thinking-search
+      api_base: "${DEEPSEEK_API_BASE}"
+      api_key: "${DEEPSEEK_API_KEY}"
