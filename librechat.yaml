@@ -58,9 +58,6 @@ interface:
 # ---------------------------------------------------------
 registration:
   socialLogins: ["github", "google", "discord", "openid", "facebook"]
-  # allowedDomains:
-  #   - "gmail.com"
-  #   - "yourcompany.com"
 
 # ---------------------------------------------------------
 # File Upload Config (enable + generous limits)
@@ -102,7 +99,6 @@ fileConfig:
 
 # ---------------------------------------------------------
 # Actions (OpenAPI tools) — allow broad domains
-# You can tighten later by whitelisting only your domains.
 # ---------------------------------------------------------
 actions:
   allowedDomains:
@@ -114,9 +110,6 @@ actions:
     - "openweathermap.org"
     - "docs.firecrawl.dev"
     - "bfl.ml"
-    # add your own domains:
-    # - "api.web3.club"
-    # - "chainnode.yourdomain.com"
 
 # ---------------------------------------------------------
 # Memory (enable, generous limits)
@@ -141,28 +134,23 @@ ocr:
 
 # ---------------------------------------------------------
 # Web Search (Serper + Firecrawl + Jina rerank)
-# If you don't set env vars, LibreChat UI will prompt for keys.
 # ---------------------------------------------------------
 webSearch:
-  # Search Provider
   searchProvider: "serper"         # Options: "serper", "searxng"
   serperApiKey: "${SERPER_API_KEY}"
   searxngInstanceUrl: "${SEARXNG_INSTANCE_URL}"
   searxngApiKey: "${SEARXNG_API_KEY}"
 
-  # Scraper
   scraperProvider: "firecrawl"     # Options: "firecrawl", "serper"
   firecrawlApiKey: "${FIRECRAWL_API_KEY}"
   firecrawlApiUrl: "${FIRECRAWL_API_URL}"
   firecrawlVersion: "${FIRECRAWL_VERSION}"
 
-  # Reranker
   rerankerType: "jina"             # Options: "jina", "cohere"
   jinaApiKey: "${JINA_API_KEY}"
   jinaApiUrl: "${JINA_API_URL}"
   cohereApiKey: "${COHERE_API_KEY}"
 
-  # General
   scraperTimeout: 7500
   safeSearch: 1
 
@@ -204,53 +192,40 @@ speech:
     openai:
       url: "${TTS_OPENAI_URL}"     # e.g. https://api.openai.com/v1/audio/speech
       apiKey: "${TTS_API_KEY}"
-      model: "${TTS_MODEL}"        # e.g. gpt-4o-mini-tts (or your provider)
+      model: "${TTS_MODEL}"        # e.g. tts-1 / gpt-4o-mini-tts / provider-specific
       voice: "${TTS_VOICE}"        # e.g. alloy
+      # ✅ REQUIRED by LibreChat config validation (v0.8.2-rc1)
+      voices:
+        - "alloy"
+        - "echo"
+        - "fable"
+        - "onyx"
+        - "nova"
+        - "shimmer"
 
 # ---------------------------------------------------------
 # MCP Servers (optional; example placeholder)
-# Add real MCP servers as needed.
 # ---------------------------------------------------------
-mcpServers:
-  # Example:
-  # spotify:
-  #   transport: "stdio"
-  #   command: "node"
-  #   args: ["${MCP_SPOTIFY_SERVER_PATH}"]
-  #   env:
-  #     SPOTIFY_CLIENT_ID: "${SPOTIFY_CLIENT_ID}"
-  #     SPOTIFY_CLIENT_SECRET: "${SPOTIFY_CLIENT_SECRET}"
-  {}
+mcpServers: {}
 
 # ---------------------------------------------------------
 # Endpoints (Assistants + Agents + Custom Providers)
 # ---------------------------------------------------------
 endpoints:
-  # Assistants API behavior (OpenAI / Azure Assistants)
   assistants:
     disableBuilder: false
     pollIntervalMs: 2000
     timeoutMs: 180000
-    # keep full capability set
     capabilities: ["code_interpreter", "retrieval", "actions", "tools", "image_vision"]
 
-  # Agents endpoint (LibreChat native agents)
   agents:
     disableBuilder: false
     recursionLimit: 50
     maxRecursionLimit: 100
-    # Allow all providers (built-in + custom); leave empty = allow all
     allowedProviders: []
-    # Enable all agent capabilities (docs default list)
     capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
 
-  # -------------------------------------------------------
-  # Custom Endpoints (OpenAI-compatible APIs)
-  # -------------------------------------------------------
   custom:
-    # -------------------------
-    # Your LiteLLM (primary)
-    # -------------------------
     - name: "LiteLLM"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
@@ -261,9 +236,6 @@ endpoints:
       titleConvo: true
       modelDisplayLabel: "LiteLLM"
 
-    # -------------------------
-    # Groq (known)
-    # -------------------------
     - name: "groq"
       apiKey: "${GROQ_API_KEY}"
       baseURL: "https://api.groq.com/openai/v1/"
@@ -278,9 +250,6 @@ endpoints:
       titleModel: "mixtral-8x7b-32768"
       modelDisplayLabel: "groq"
 
-    # -------------------------
-    # OpenRouter (known)
-    # -------------------------
     - name: "OpenRouter"
       apiKey: "${OPENROUTER_API_KEY}"
       baseURL: "https://openrouter.ai/api/v1"
@@ -293,9 +262,6 @@ endpoints:
       dropParams: ["stop"]
       modelDisplayLabel: "OpenRouter"
 
-    # -------------------------
-    # Mistral (known)
-    # -------------------------
     - name: "Mistral"
       apiKey: "${MISTRAL_API_KEY}"
       baseURL: "https://api.mistral.ai/v1"
@@ -310,12 +276,9 @@ endpoints:
       dropParams: ["stop", "user", "frequency_penalty", "presence_penalty"]
       modelDisplayLabel: "Mistral"
 
-    # -------------------------
-    # Deepseek (known)
-    # -------------------------
     - name: "Deepseek"
       apiKey: "${DEEPSEEK_API_KEY}"
-      baseURL: "${DEEPSEEK_BASE_URL}"   # e.g. https://api.deepseek.com
+      baseURL: "${DEEPSEEK_BASE_URL}"
       models:
         fetch: true
         default:
@@ -325,12 +288,9 @@ endpoints:
       titleModel: "${DEEPSEEK_DEFAULT_MODEL}"
       modelDisplayLabel: "Deepseek"
 
-    # -------------------------
-    # Fireworks (known)
-    # -------------------------
     - name: "Fireworks"
       apiKey: "${FIREWORKS_API_KEY}"
-      baseURL: "${FIREWORKS_BASE_URL}"  # e.g. https://api.fireworks.ai/inference/v1
+      baseURL: "${FIREWORKS_BASE_URL}"
       models:
         fetch: true
         default:
@@ -339,12 +299,9 @@ endpoints:
       titleModel: "${FIREWORKS_DEFAULT_MODEL}"
       modelDisplayLabel: "Fireworks"
 
-    # -------------------------
-    # Perplexity (known)
-    # -------------------------
     - name: "Perplexity"
       apiKey: "${PERPLEXITY_API_KEY}"
-      baseURL: "${PERPLEXITY_BASE_URL}" # e.g. https://api.perplexity.ai
+      baseURL: "${PERPLEXITY_BASE_URL}"
       models:
         fetch: true
         default:
@@ -353,9 +310,6 @@ endpoints:
       titleModel: "${PERPLEXITY_DEFAULT_MODEL}"
       modelDisplayLabel: "Perplexity"
 
-    # -------------------------
-    # together.ai (known)
-    # -------------------------
     - name: "together.ai"
       apiKey: "${TOGETHERAI_API_KEY}"
       baseURL: "https://api.together.xyz"
@@ -368,9 +322,6 @@ endpoints:
       titleModel: "meta-llama/Llama-3.1-70B-Instruct-Turbo"
       modelDisplayLabel: "together.ai"
 
-    # -------------------------
-    # Workers AI (Cloudflare)
-    # -------------------------
     - name: "Workers AI"
       apiKey: "${CLOUDFLARE_WORKERS_AI_TOKEN}"
       baseURL: "${CLOUDFLARE_WORKERS_AI_BASE_URL}"
@@ -382,9 +333,6 @@ endpoints:
       titleModel: "${CLOUDFLARE_WORKERS_AI_DEFAULT_MODEL}"
       modelDisplayLabel: "Workers AI"
 
-    # -------------------------
-    # xAI (known)
-    # -------------------------
     - name: "xai"
       apiKey: "${XAI_API_KEY}"
       baseURL: "https://api.x.ai/v1"
@@ -397,12 +345,9 @@ endpoints:
       titleModel: "grok-beta"
       modelDisplayLabel: "Grok"
 
-    # -------------------------
-    # vLLM (local gateway)
-    # -------------------------
     - name: "vLLM"
-      apiKey: "${VLLM_API_KEY}"          # can be dummy if your vLLM doesn’t require auth
-      baseURL: "${VLLM_BASE_URL}"        # e.g. http://localhost:8023/v1
+      apiKey: "${VLLM_API_KEY}"
+      baseURL: "${VLLM_BASE_URL}"
       models:
         fetch: true
         default:
@@ -411,12 +356,9 @@ endpoints:
       titleModel: "${VLLM_DEFAULT_MODEL}"
       modelDisplayLabel: "vLLM"
 
-    # -------------------------
-    # Ollama (local)
-    # -------------------------
     - name: "ollama"
-      apiKey: "${OLLAMA_API_KEY}"        # can be dummy
-      baseURL: "${OLLAMA_BASE_URL}"      # e.g. http://localhost:11434/v1
+      apiKey: "${OLLAMA_API_KEY}"
+      baseURL: "${OLLAMA_BASE_URL}"
       models:
         fetch: true
         default:
@@ -425,9 +367,6 @@ endpoints:
       titleModel: "${OLLAMA_DEFAULT_MODEL}"
       modelDisplayLabel: "ollama"
 
-    # -------------------------
-    # HuggingFace Inference (OpenAI-compatible gateways vary)
-    # -------------------------
     - name: "Huggingface"
       apiKey: "${HUGGINGFACE_API_KEY}"
       baseURL: "${HUGGINGFACE_BASE_URL}"
@@ -439,9 +378,6 @@ endpoints:
       titleModel: "${HUGGINGFACE_DEFAULT_MODEL}"
       modelDisplayLabel: "Huggingface"
 
-    # -------------------------
-    # Cohere (if using OpenAI-compatible gateway / proxy)
-    # -------------------------
     - name: "Cohere"
       apiKey: "${COHERE_LLM_API_KEY}"
       baseURL: "${COHERE_OPENAI_COMPAT_BASE_URL}"
@@ -453,10 +389,6 @@ endpoints:
       titleModel: "${COHERE_DEFAULT_MODEL}"
       modelDisplayLabel: "Cohere"
 
-    # -------------------------
-    # Databricks / Portkey / ShuttleAI / TrueFoundry / Vultr
-    # (All assume OpenAI-compatible gateway URLs)
-    # -------------------------
     - name: "Databricks"
       apiKey: "${DATABRICKS_API_KEY}"
       baseURL: "${DATABRICKS_BASE_URL}"
@@ -507,9 +439,6 @@ endpoints:
       titleModel: "${VULTR_DEFAULT_MODEL}"
       modelDisplayLabel: "Vultr"
 
-    # -------------------------
-    # Apple MLX (local gateway)
-    # -------------------------
     - name: "MLX"
       apiKey: "${MLX_API_KEY}"
       baseURL: "${MLX_BASE_URL}"
@@ -520,9 +449,6 @@ endpoints:
       titleModel: "${MLX_DEFAULT_MODEL}"
       modelDisplayLabel: "MLX"
 
-    # -------------------------
-    # NeurochainAI (gateway)
-    # -------------------------
     - name: "NeurochainAI"
       apiKey: "${NEUROCHAIN_API_KEY}"
       baseURL: "${NEUROCHAIN_BASE_URL}"
