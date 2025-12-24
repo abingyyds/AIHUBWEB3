@@ -89,17 +89,14 @@ webSearch:
   serperApiKey: "${SERPER_API_KEY}"
   searxngInstanceUrl: "${SEARXNG_INSTANCE_URL}"
   searxngApiKey: "${SEARXNG_API_KEY}"
-
   scraperProvider: "firecrawl"
   firecrawlApiKey: "${FIRECRAWL_API_KEY}"
   firecrawlApiUrl: "${FIRECRAWL_API_URL}"
   firecrawlVersion: "${FIRECRAWL_VERSION}"
-
   rerankerType: "jina"
   jinaApiKey: "${JINA_API_KEY}"
   jinaApiUrl: "${JINA_API_URL}"
   cohereApiKey: "${COHERE_API_KEY}"
-
   scraperTimeout: 7500
   safeSearch: 1
 
@@ -159,17 +156,15 @@ endpoints:
     disableBuilder: false
     recursionLimit: 50
     maxRecursionLimit: 100
+    # 只控制 Agents 能用哪些 provider；你有这些就足够了
     allowedProviders:
       - openAI
-      - anthropic
-      - google
-      - azureOpenAI
-      - bedrock
-      - assistants
-      - azureAssistants
-      - LiteLLM
-      - OpenRouter
+      - LiteLLM-OpenAI
+      - LiteLLM-Claude
+      - LiteLLM-DeepSeek
+      - LiteLLM-Grok
       - groq
+      - OpenRouter
       - Mistral
       - Deepseek
       - Perplexity
@@ -181,31 +176,106 @@ endpoints:
     capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
 
   # -------------------------------------------------------
-  # OpenAI (OBJECT, 必须是 object)
-  # 用于 LibreChat 内置 OpenAI 图片生成流程（同一套 LiteLLM）
+  # OpenAI (OBJECT)
+  # 让 LibreChat “内置 OpenAI 功能路径”可用（含 images / audio 等）
+  # 你这里用 LiteLLM 当 OpenAI-compatible 网关
   # -------------------------------------------------------
   openAI:
     apiKey: "${LITELLM_VIRTUAL_KEY}"
     baseURL: "${LITELLM_BASE_URL}"
     models:
       default:
-        - "gemini-3-pro-image-preview"
+        - "gpt-5.2"
+        - "gpt-5.1"
+        - "gpt-5-pro"
+        - "gpt-4.1"
+      # 只有当你的 LiteLLM 真正提供了 OpenAI images 能力时再启用
+      # image:
+      #   - "gpt-image-1"
 
   # -------------------------------------------------------
   # Custom Endpoints（ARRAY）
+  # 重点：全部 fetch: false，写死模型列表，不自动拉取
   # -------------------------------------------------------
   custom:
-    - name: "LiteLLM"
+    # =========================
+    # LiteLLM - OpenAI family
+    # =========================
+    - name: "LiteLLM-OpenAI"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
-        fetch: true
-        # v1.3.1 必填：哪怕 fetch 也要给 default 数组
+        fetch: false
         default:
+          - "gpt-5.2"
+          - "gpt-5.1"
+          - "gpt-5-pro"
           - "gpt-4.1"
       titleConvo: true
-      modelDisplayLabel: "LiteLLM"
+      modelDisplayLabel: "OpenAI (via LiteLLM)"
 
+    # =========================
+    # LiteLLM - Claude family (你截图里是 openai/claude-*)
+    # =========================
+    - name: "LiteLLM-Claude"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "openai/claude-sonnet-4-5-thinking"
+          - "openai/claude-opus-4-5-thinking"
+      titleConvo: true
+      modelDisplayLabel: "Claude (via LiteLLM)"
+
+    # =========================
+    # LiteLLM - Grok family (你截图里是 openai/grok-*)
+    # =========================
+    - name: "LiteLLM-Grok"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "openai/grok-4.1"
+          - "openai/grok-4.1-thinking"
+      titleConvo: true
+      modelDisplayLabel: "Grok (via LiteLLM)"
+
+    # =========================
+    # LiteLLM - DeepSeek family (你截图里是 openai/DeepSeek-*)
+    # =========================
+    - name: "LiteLLM-DeepSeek"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "openai/DeepSeek-V3.2"
+          - "openai/DeepSeek-V3.2-search"
+          - "openai/DeepSeek-V3.2-thinking"
+          - "openai/DeepSeek-V3.2-thinking-search"
+      titleConvo: true
+      modelDisplayLabel: "DeepSeek (via LiteLLM)"
+
+    # =========================
+    # Groq (直连) - 你已有 DB Model
+    # =========================
+    - name: "groq"
+      apiKey: "${GROQ_API_KEY}"
+      baseURL: "https://api.groq.com/openai/v1"
+      models:
+        fetch: false
+        default:
+          - "groq/llama-3.1-8b-instant"
+      titleConvo: true
+      titleMethod: "completion"
+      titleModel: "groq/llama-3.1-8b-instant"
+      modelDisplayLabel: "Groq"
+
+    # -------------------------
+    # 下面这些保持你原样（仍可 fetch=true，也可后续改为 false 写死）
+    # -------------------------
     - name: "OpenRouter"
       apiKey: "${OPENROUTER_API_KEY}"
       baseURL: "https://openrouter.ai/api/v1"
@@ -219,20 +289,6 @@ endpoints:
       titleModel: "openai/gpt-4o-mini"
       dropParams: ["stop"]
       modelDisplayLabel: "OpenRouter"
-
-    - name: "groq"
-      apiKey: "${GROQ_API_KEY}"
-      baseURL: "https://api.groq.com/openai/v1"
-      models:
-        fetch: false
-        default:
-          - "llama-3.1-8b-instant"
-          - "llama3-70b-8192"
-          - "mixtral-8x7b-32768"
-      titleConvo: true
-      titleMethod: "completion"
-      titleModel: "llama3-70b-8192"
-      modelDisplayLabel: "groq"
 
     - name: "Mistral"
       apiKey: "${MISTRAL_API_KEY}"
@@ -304,7 +360,7 @@ endpoints:
       titleConvo: true
       titleMethod: "completion"
       titleModel: "grok-beta"
-      modelDisplayLabel: "Grok"
+      modelDisplayLabel: "xAI"
 
     - name: "vLLM"
       apiKey: "${VLLM_API_KEY}"
