@@ -149,6 +149,13 @@ speech:
 
 mcpServers: {}
 
+imageEndpoints:
+  - name: "LiteLLM Images"
+    apiKey: "${LITELLM_VIRTUAL_KEY}"
+    baseURL: "${LITELLM_BASE_URL}"
+    models:
+      - "gemini-3-pro-image-preview"
+
 endpoints:
   assistants:
     disableBuilder: false
