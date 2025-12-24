@@ -258,20 +258,7 @@ endpoints:
       titleConvo: true
       modelDisplayLabel: "DeepSeek (via LiteLLM)"
 
-    # =========================
-    # Groq (直连) - 你已有 DB Model
-    # =========================
-    - name: "groq"
-      apiKey: "${GROQ_API_KEY}"
-      baseURL: "https://api.groq.com/openai/v1"
-      models:
-        fetch: false
-        default:
-          - "groq/llama-3.1-8b-instant"
-      titleConvo: true
-      titleMethod: "completion"
-      titleModel: "groq/llama-3.1-8b-instant"
-      modelDisplayLabel: "Groq"
+
 
     # =========================
     # LiteLLM - Gemini family
