@@ -1,87 +1,274 @@
-custom:
-  # =========================
-  # LiteLLM - Grok family (置顶)
-  # =========================
-  - name: "LiteLLM-Grok"
-    apiKey: "${LITELLM_VIRTUAL_KEY}"
-    baseURL: "${LITELLM_BASE_URL}"
-    models:
-      fetch: false
-      default:
-        - "openai/grok-4.1"
-        - "openai/grok-4.1-thinking"
-    titleConvo: true
-    modelDisplayLabel: "Grok (via LiteLLM)"
+version: "1.3.1"
+cache: true
 
-  # =========================
-  # LiteLLM - OpenAI family
-  # =========================
-  - name: "LiteLLM-OpenAI"
+interface:
+  modelSelect: true
+  parameters: true
+  sidePanel: true
+  presets: true
+  prompts: true
+  bookmarks: true
+  multiConvo: true
+  agents: true
+  webSearch: true
+  fileSearch: true
+  fileCitations: true
+  runCode: true
+  marketplace:
+    use: true
+  mcpServers:
+    placeholder: "MCP Servers"
+  privacyPolicy:
+    externalUrl: "${PRIVACY_POLICY_URL}"
+    openNewTab: true
+  termsOfService:
+    externalUrl: "${TOS_URL}"
+    openNewTab: true
+  customWelcome: "Welcome, {{user.name}}."
+  peoplePicker:
+    users: true
+    groups: true
+    roles: true
+
+registration:
+  socialLogins: ["github", "google", "discord", "openid", "facebook"]
+
+fileConfig:
+  serverFileSizeLimit: 200
+  avatarSizeLimit: 5
+  endpoints:
+    default:
+      fileLimit: 20
+      fileSizeLimit: 50
+      totalSizeLimit: 200
+      supportedMimeTypes:
+        - "image/.*"
+        - "application/pdf"
+        - "text/.*"
+        - "application/json"
+        - "application/zip"
+        - "application/vnd.openxmlformats-officedocument.*"
+        - "application/msword"
+        - "application/vnd.ms-excel"
+        - "application/vnd.ms-powerpoint"
+    assistants:
+      fileLimit: 20
+      fileSizeLimit: 50
+      totalSizeLimit: 200
+      supportedMimeTypes: ["image/.*", "application/pdf", "text/.*"]
+    agents:
+      fileLimit: 20
+      fileSizeLimit: 50
+      totalSizeLimit: 200
+      supportedMimeTypes: ["image/.*", "application/pdf", "text/.*"]
+
+actions:
+  allowedDomains:
+    - "librechat.ai"
+    - "github.com"
+    - "api.github.com"
+    - "google.com"
+    - "serper.dev"
+    - "openweathermap.org"
+    - "docs.firecrawl.dev"
+    - "bfl.ml"
+
+memory:
+  disabled: false
+  personalize: true
+  messageWindowSize: 30
+  tokenLimit: 8000
+  charLimit: 30000
+  validKeys: ["profile", "preferences", "projects", "glossary"]
+
+ocr:
+  enabled: true
+
+webSearch:
+  searchProvider: "serper"
+  serperApiKey: "${SERPER_API_KEY}"
+  searxngInstanceUrl: "${SEARXNG_INSTANCE_URL}"
+  searxngApiKey: "${SEARXNG_API_KEY}"
+  scraperProvider: "firecrawl"
+  firecrawlApiKey: "${FIRECRAWL_API_KEY}"
+  firecrawlApiUrl: "${FIRECRAWL_API_URL}"
+  firecrawlVersion: "${FIRECRAWL_VERSION}"
+  rerankerType: "jina"
+  jinaApiKey: "${JINA_API_KEY}"
+  jinaApiUrl: "${JINA_API_URL}"
+  cohereApiKey: "${COHERE_API_KEY}"
+  scraperTimeout: 7500
+  safeSearch: 1
+
+speech:
+  speechTab:
+    conversationMode: true
+    advancedMode: true
+    speechToText:
+      engineSTT: "external"
+      languageSTT: "English (US)"
+      autoTranscribeAudio: true
+      decibelValue: -45
+      autoSendText: 0
+    textToSpeech:
+      engineTTS: "external"
+      voice: "alloy"
+      languageTTS: "en"
+      automaticPlayback: true
+      playbackRate: 1.0
+      cacheTTS: true
+
+  stt:
+    openai:
+      url: "${STT_OPENAI_URL}"
+      apiKey: "${STT_API_KEY}"
+      model: "${STT_MODEL}"
+    azureOpenAI:
+      instanceName: "${AZURE_STT_INSTANCE}"
+      apiKey: "${AZURE_STT_API_KEY}"
+      deploymentName: "${AZURE_STT_DEPLOYMENT}"
+      apiVersion: "${AZURE_STT_API_VERSION}"
+
+  tts:
+    openai:
+      url: "${TTS_OPENAI_URL}"
+      apiKey: "${TTS_API_KEY}"
+      model: "${TTS_MODEL}"
+      voice: "${TTS_VOICE}"
+      # 必填，否则会触发你日志里的校验错误（voices undefined）
+      voices:
+        - "alloy"
+        - "echo"
+        - "fable"
+        - "onyx"
+        - "nova"
+        - "shimmer"
+
+mcpServers: {}
+
+endpoints:
+  assistants:
+    disableBuilder: false
+    pollIntervalMs: 2000
+    timeoutMs: 180000
+    capabilities: ["code_interpreter", "retrieval", "actions", "tools", "image_vision"]
+
+  agents:
+    disableBuilder: false
+    recursionLimit: 50
+    maxRecursionLimit: 100
+    # 让 Agents 可以选择这些“端点名”
+    allowedProviders:
+      - openAI
+      - LiteLLM-Grok
+      - LiteLLM-Claude
+      - LiteLLM-DeepSeek
+      - LiteLLM-Gemini
+      - LiteLLM-OpenAI
+    capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
+
+  # -------------------------------------------------------
+  # OpenAI (OBJECT)
+  # 让 LibreChat 的“内置 OpenAI 功能路径”可用（含 images/audio/vision 等路径）
+  # 这里仍然用 LiteLLM 作为 OpenAI-compatible 网关
+  # -------------------------------------------------------
+  openAI:
     apiKey: "${LITELLM_VIRTUAL_KEY}"
     baseURL: "${LITELLM_BASE_URL}"
     models:
-      fetch: false
       default:
-        - "gpt-5.2"
+        # 你也可以把 grok/claude 等放这里，但分组展示主要靠 custom
+        - "gpt-4.1"
         - "gpt-5.1"
         - "gpt-5-pro"
-        - "gpt-4.1"
-    titleConvo: true
-    modelDisplayLabel: "OpenAI (via LiteLLM)"
+        - "gpt-5.2"
+      # 如需图片生成：只在 LiteLLM 确实支持 /v1/images 且模型也对得上时再启用
+      # image:
+      #   - "gpt-image-1"
 
-  # =========================
-  # LiteLLM - Claude family
-  # =========================
-  - name: "LiteLLM-Claude"
-    apiKey: "${LITELLM_VIRTUAL_KEY}"
-    baseURL: "${LITELLM_BASE_URL}"
-    models:
-      fetch: false
-      default:
-        - "openai/claude-sonnet-4-5-thinking"
-        - "openai/claude-opus-4-5-thinking"
-    titleConvo: true
-    modelDisplayLabel: "Claude (via LiteLLM)"
+  # -------------------------------------------------------
+  # Custom Endpoints（ARRAY）- 分组显示用
+  # 官方 custom 结构与字段定义见文档
+  # -------------------------------------------------------
+  custom:
+    # =========================
+    # 1) Grok（置顶）
+    # =========================
+    - name: "LiteLLM-Grok"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "grok-4.1"
+          - "grok-4.1-thinking"
+      titleConvo: true
+      modelDisplayLabel: "Grok (via LiteLLM)"
 
-  # =========================
-  # LiteLLM - DeepSeek family
-  # =========================
-  - name: "LiteLLM-DeepSeek"
-    apiKey: "${LITELLM_VIRTUAL_KEY}"
-    baseURL: "${LITELLM_BASE_URL}"
-    models:
-      fetch: false
-      default:
-        - "openai/DeepSeek-V3.2"
-        - "openai/DeepSeek-V3.2-search"
-        - "openai/DeepSeek-V3.2-thinking"
-        - "openai/DeepSeek-V3.2-thinking-search"
-    titleConvo: true
-    modelDisplayLabel: "DeepSeek (via LiteLLM)"
+    # =========================
+    # 2) Claude
+    # =========================
+    - name: "LiteLLM-Claude"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "claude-sonnet-4-5-thinking"
+          - "claude-opus-4-5-thinking"
+      titleConvo: true
+      modelDisplayLabel: "Claude (via LiteLLM)"
 
-  # =========================
-  # LiteLLM - Gemini family (补齐 + 统一 openai/ 前缀)
-  # =========================
-  - name: "LiteLLM-Gemini"
-    apiKey: "${LITELLM_VIRTUAL_KEY}"
-    baseURL: "${LITELLM_BASE_URL}"
-    models:
-      fetch: false
-      default:
-        # Gemini 2.5 (stable)
-        - "openai/gemini-2.5-pro"
-        - "openai/gemini-2.5-pro-thinking"
-        - "openai/gemini-2.5-pro-search"
-        - "openai/gemini-2.5-flash"
+    # =========================
+    # 3) DeepSeek
+    # =========================
+    - name: "LiteLLM-DeepSeek"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "DeepSeek-V3.2"
+          - "DeepSeek-V3.2-search"
+          - "DeepSeek-V3.2-thinking"
+          - "DeepSeek-V3.2-thinking-search"
+      titleConvo: true
+      modelDisplayLabel: "DeepSeek (via LiteLLM)"
 
-        # Gemini 2.5 previews
-        - "openai/gemini-2.5-pro-preview-05-06"
-        - "openai/gemini-2.5-pro-preview-06-05"
+    # =========================
+    # 4) Gemini
+    # =========================
+    - name: "LiteLLM-Gemini"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "gemini-2.5-pro"
+          - "gemini-2.5-pro-thinking"
+          - "gemini-2.5-pro-search"
+          - "gemini-2.5-flash"
+          - "gemini-2.5-pro-preview-05-06"
+          - "gemini-2.5-pro-preview-06-05"
+          - "gemini-3-pro-preview"
+          - "gemini-3-pro-preview-thinking"
+          - "gemini-3-pro-preview-search"
+          - "gemini-3-flash-preview"
+      titleConvo: true
+      modelDisplayLabel: "Gemini (via LiteLLM)"
 
-        # Gemini 3.x previews
-        - "openai/gemini-3-pro-preview"
-        - "openai/gemini-3-pro-preview-thinking"
-        - "openai/gemini-3-pro-preview-search"
-        - "openai/gemini-3-flash-preview"
-    titleConvo: true
-    modelDisplayLabel: "Gemini (via LiteLLM)"
+    # =========================
+    # 5) OpenAI GPT（单独一组）
+    # =========================
+    - name: "LiteLLM-OpenAI"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "gpt-5.2"
+          - "gpt-5.1"
+          - "gpt-5-pro"
+          - "gpt-4.1"
+      titleConvo: true
+      modelDisplayLabel: "OpenAI (via LiteLLM)"
