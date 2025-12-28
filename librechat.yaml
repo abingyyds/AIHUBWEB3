@@ -189,7 +189,7 @@ endpoints:
       titleConvo: true
       modelDisplayLabel: "Grok"
       
-      iconURL: "https://i.meee.com.tw/KVk9VsV.webp"
+      iconURL: "https://i.meee.com.tw/6HILd43.png"
 
     - name: "Claude"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
