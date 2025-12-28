@@ -215,7 +215,7 @@ endpoints:
           - "DeepSeek-V3.2-thinking-search"
       titleConvo: true
       modelDisplayLabel: "DeepSeek"
-      iconURL: "https://i.meee.com.tw/ugRGT9k.jpg"
+      iconURL: "https://i.meee.com.tw/cf38BAs.png"
 
     - name: "Gemini"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
