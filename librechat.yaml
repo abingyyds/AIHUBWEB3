@@ -135,7 +135,6 @@ speech:
       apiKey: "${TTS_API_KEY}"
       model: "${TTS_MODEL}"
       voice: "${TTS_VOICE}"
-      # 必填，否则会触发你日志里的校验错误（voices undefined）
       voices:
         - "alloy"
         - "echo"
@@ -157,44 +156,27 @@ endpoints:
     disableBuilder: false
     recursionLimit: 50
     maxRecursionLimit: 100
-    # 让 Agents 可以选择这些“端点名”
     allowedProviders:
       - openAI
-      - LiteLLM-Grok
-      - LiteLLM-Claude
-      - LiteLLM-DeepSeek
-      - LiteLLM-Gemini
-      - LiteLLM-OpenAI
+      - Grok
+      - Claude
+      - DeepSeek
+      - Gemini
+      - OpenAI
     capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
 
-  # -------------------------------------------------------
-  # OpenAI (OBJECT)
-  # 让 LibreChat 的“内置 OpenAI 功能路径”可用（含 images/audio/vision 等路径）
-  # 这里仍然用 LiteLLM 作为 OpenAI-compatible 网关
-  # -------------------------------------------------------
   openAI:
     apiKey: "${LITELLM_VIRTUAL_KEY}"
     baseURL: "${LITELLM_BASE_URL}"
     models:
       default:
-        # 你也可以把 grok/claude 等放这里，但分组展示主要靠 custom
         - "gpt-4.1"
         - "gpt-5.1"
         - "gpt-5-pro"
         - "gpt-5.2"
-      # 如需图片生成：只在 LiteLLM 确实支持 /v1/images 且模型也对得上时再启用
-      # image:
-      #   - "gpt-image-1"
 
-  # -------------------------------------------------------
-  # Custom Endpoints（ARRAY）- 分组显示用
-  # 官方 custom 结构与字段定义见文档
-  # -------------------------------------------------------
   custom:
-    # =========================
-    # 1) Grok（置顶）
-    # =========================
-    - name: "LiteLLM-Grok"
+    - name: "Grok"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -203,12 +185,9 @@ endpoints:
           - "grok-4.1"
           - "grok-4.1-thinking"
       titleConvo: true
-      modelDisplayLabel: "Grok (via LiteLLM)"
+      modelDisplayLabel: "Grok"
 
-    # =========================
-    # 2) Claude
-    # =========================
-    - name: "LiteLLM-Claude"
+    - name: "Claude"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -217,12 +196,9 @@ endpoints:
           - "claude-sonnet-4-5-thinking"
           - "claude-opus-4-5-thinking"
       titleConvo: true
-      modelDisplayLabel: "Claude (via LiteLLM)"
+      modelDisplayLabel: "Claude"
 
-    # =========================
-    # 3) DeepSeek
-    # =========================
-    - name: "LiteLLM-DeepSeek"
+    - name: "DeepSeek"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -233,12 +209,9 @@ endpoints:
           - "DeepSeek-V3.2-thinking"
           - "DeepSeek-V3.2-thinking-search"
       titleConvo: true
-      modelDisplayLabel: "DeepSeek (via LiteLLM)"
+      modelDisplayLabel: "DeepSeek"
 
-    # =========================
-    # 4) Gemini
-    # =========================
-    - name: "LiteLLM-Gemini"
+    - name: "Gemini"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -255,12 +228,9 @@ endpoints:
           - "gemini-3-pro-preview-search"
           - "gemini-3-flash-preview"
       titleConvo: true
-      modelDisplayLabel: "Gemini (via LiteLLM)"
+      modelDisplayLabel: "Gemini"
 
-    # =========================
-    # 5) OpenAI GPT（单独一组）
-    # =========================
-    - name: "LiteLLM-OpenAI"
+    - name: "OpenAI"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -271,4 +241,4 @@ endpoints:
           - "gpt-5-pro"
           - "gpt-4.1"
       titleConvo: true
-      modelDisplayLabel: "OpenAI (via LiteLLM)"
+      modelDisplayLabel: "OpenAI"
