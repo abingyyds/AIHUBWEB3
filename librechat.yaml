@@ -209,10 +209,10 @@ endpoints:
       models:
         fetch: false
         default:
-          - "openai/DeepSeek-V3.2"
-          - "openai/DeepSeek-V3.2-search"
-          - "openai/DeepSeek-V3.2-thinking"
-          - "openai/DeepSeek-V3.2-thinking-search"
+          - "DeepSeek-V3.2"
+          - "DeepSeek-V3.2-search"
+          - "DeepSeek-V3.2-thinking"
+          - "DeepSeek-V3.2-thinking-search"
       titleConvo: true
       modelDisplayLabel: "DeepSeek"
       iconURL: "${ICON_DEEPSEEK_URL}"
