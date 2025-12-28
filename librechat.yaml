@@ -189,7 +189,7 @@ endpoints:
       titleConvo: true
       modelDisplayLabel: "Grok"
       
-      iconURL: "${https://i.meee.com.tw/tCDvKU6.png}"
+      iconURL: "https://i.meee.com.tw/tCDvKU6.png"
 
     - name: "Claude"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
@@ -201,7 +201,7 @@ endpoints:
           - "claude-opus-4-5-thinking"
       titleConvo: true
       modelDisplayLabel: "Claude"
-      iconURL: "${https://i.meee.com.tw/tzFHzD4.png}"
+      iconURL: "https://i.meee.com.tw/tzFHzD4.png"
 
     - name: "DeepSeek"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
@@ -215,7 +215,7 @@ endpoints:
           - "DeepSeek-V3.2-thinking-search"
       titleConvo: true
       modelDisplayLabel: "DeepSeek"
-      iconURL: "${https://i.meee.com.tw/ZbCwzCM.png}"
+      iconURL: "https://i.meee.com.tw/ZbCwzCM.png"
 
     - name: "Gemini"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
@@ -226,7 +226,7 @@ endpoints:
           - "gemini-3-pro-preview"
       titleConvo: true
       modelDisplayLabel: "Gemini"
-      iconURL: "${https://i.meee.com.tw/o74MAsg.png}"
+      iconURL: "https://i.meee.com.tw/o74MAsg.png"
 
     - name: "OpenAI"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
@@ -240,4 +240,4 @@ endpoints:
           - "gpt-4.1"
       titleConvo: true
       modelDisplayLabel: "OpenAI"
-      iconURL: "${https://i.meee.com.tw/oczJj8k.png}"
+      iconURL: "https://i.meee.com.tw/oczJj8k.png"
