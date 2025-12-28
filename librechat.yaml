@@ -152,20 +152,20 @@ endpoints:
     timeoutMs: 180000
     capabilities: ["code_interpreter", "retrieval", "actions", "tools", "image_vision"]
 
-  # 方案 B-2：allowedProviders 与 custom.name 完全一致（并伪装成内置 provider 以显示图标）
   agents:
     disableBuilder: false
     recursionLimit: 50
     maxRecursionLimit: 100
     allowedProviders:
-      - openAI        # 内置 OpenAI provider（你已有 endpoints.openAI）
-      - xai           # Grok 伪装（若你的前端版本支持 xAI 图标）
-      - anthropic     # Claude 伪装
-      - deepseek      # DeepSeek 伪装
-      - google        # Gemini 伪装
+      - openAI
+      - Grok
+      - Claude
+      - DeepSeek
+      - Gemini
+      - OpenAI
     capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
 
-  # 内置 openAI provider（有 OpenAI 图标 + 内置能力路径）
+  # 内置 OpenAI 路径（给 UI 的 images/audio/vision 等内置功能用）
   openAI:
     apiKey: "${LITELLM_VIRTUAL_KEY}"
     baseURL: "${LITELLM_BASE_URL}"
@@ -176,10 +176,9 @@ endpoints:
         - "gpt-5-pro"
         - "gpt-5.2"
 
-  # custom 端点：把 name 改成内置 provider key（用于触发图标）
+  # 自定义分组（关键：加 iconURL）
   custom:
-    # Grok -> xai
-    - name: "xai"
+    - name: "Grok"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -189,9 +188,10 @@ endpoints:
           - "grok-4.1-thinking"
       titleConvo: true
       modelDisplayLabel: "Grok"
+      # 建议你换成你自己仓库的 raw 地址，最稳定
+      iconURL: "${ICON_XAI_URL}"
 
-    # Claude -> anthropic
-    - name: "anthropic"
+    - name: "Claude"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -201,9 +201,9 @@ endpoints:
           - "claude-opus-4-5-thinking"
       titleConvo: true
       modelDisplayLabel: "Claude"
+      iconURL: "${ICON_ANTHROPIC_URL}"
 
-    # DeepSeek -> deepseek
-    - name: "deepseek"
+    - name: "DeepSeek"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -215,9 +215,9 @@ endpoints:
           - "DeepSeek-V3.2-thinking-search"
       titleConvo: true
       modelDisplayLabel: "DeepSeek"
+      iconURL: "${ICON_DEEPSEEK_URL}"
 
-    # Gemini -> google
-    - name: "google"
+    - name: "Gemini"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
       baseURL: "${LITELLM_BASE_URL}"
       models:
@@ -226,3 +226,18 @@ endpoints:
           - "gemini-3-pro-preview"
       titleConvo: true
       modelDisplayLabel: "Gemini"
+      iconURL: "${ICON_GOOGLE_URL}"
+
+    - name: "OpenAI"
+      apiKey: "${LITELLM_VIRTUAL_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        fetch: false
+        default:
+          - "gpt-5.2"
+          - "gpt-5.1"
+          - "gpt-5-pro"
+          - "gpt-4.1"
+      titleConvo: true
+      modelDisplayLabel: "OpenAI"
+      iconURL: "${ICON_OPENAI_URL}"
