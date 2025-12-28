@@ -165,7 +165,7 @@ endpoints:
       - OpenAI
     capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
 
-  # 内置 OpenAI 路径（给 UI 的 images/audio/vision 等内置功能用）
+
   openAI:
     apiKey: "${LITELLM_VIRTUAL_KEY}"
     baseURL: "${LITELLM_BASE_URL}"
@@ -176,7 +176,7 @@ endpoints:
         - "gpt-5-pro"
         - "gpt-5.2"
 
-  # 自定义分组（关键：加 iconURL）
+
   custom:
     - name: "Grok"
       apiKey: "${LITELLM_VIRTUAL_KEY}"
@@ -188,7 +188,7 @@ endpoints:
           - "grok-4.1-thinking"
       titleConvo: true
       modelDisplayLabel: "Grok"
-      # 建议你换成你自己仓库的 raw 地址，最稳定
+      
       iconURL: "${ICON_XAI_URL}"
 
     - name: "Claude"
